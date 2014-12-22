@@ -149,7 +149,7 @@ public class BubbleGame extends Game implements InputProcessor {
         PositionComponent pos=new PositionComponent(touch.x-(float)interval/timeVsSize,touch.y-(float)interval/timeVsSize);
         BoundComponent bound=new BoundComponent();
         BubbleComponent bub=new BubbleComponent();
-        ColorComponent color=new ColorComponent(Color.CYAN);
+        ColorComponent color=new ColorComponent(new Color((int)(Math.random()*0xFFFFFF)<<8|0xFF));
         RenderComponent render=new RenderComponent(Assets.circle);
         VelocityComponent vel=new VelocityComponent();
         Entity entity=new Entity();
