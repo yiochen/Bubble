@@ -26,7 +26,9 @@ import chen.yiou.bubble.components.PositionComponent;
 import chen.yiou.bubble.components.RenderComponent;
 import chen.yiou.bubble.components.VelocityComponent;
 import chen.yiou.bubble.systems.BoundSystem;
+import chen.yiou.bubble.systems.PositionSystem;
 import chen.yiou.bubble.systems.RenderSystem;
+import chen.yiou.bubble.systems.VelocitySystem;
 
 public class BubbleGame extends Game implements InputProcessor {
 
@@ -57,8 +59,12 @@ public class BubbleGame extends Game implements InputProcessor {
     }
 
     private void createSystem() {
+        PositionSystem posSystem=new PositionSystem();
+        VelocitySystem velSystem=new VelocitySystem();
         BoundSystem boundSystem=new BoundSystem();
         RenderSystem renderSystem=new RenderSystem(new SpriteBatch(),camera);
+        engine.addSystem(posSystem);
+        engine.addSystem(velSystem);
         engine.addSystem(boundSystem);
         engine.addSystem(renderSystem);
         engine.addEntityListener(boundSystem);
