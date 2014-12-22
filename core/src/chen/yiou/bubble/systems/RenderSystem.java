@@ -23,6 +23,7 @@ import chen.yiou.bubble.components.RenderComponent;
  * Created by Yiou on 12/22/2014.
  */
 public class RenderSystem extends IteratingSystem {
+    private static final String TAG = "RenderSystem";
     private final ComponentMapper<RenderComponent> renderMap;
     private final ComponentMapper<DimensionComponent> dimMap;
     private final ComponentMapper<PositionComponent> posMap;
@@ -69,6 +70,7 @@ public class RenderSystem extends IteratingSystem {
         batch.setProjectionMatrix(camera.combined);
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
         //draw all the entities
         for (Entity entity:renderQueue){
@@ -87,7 +89,8 @@ public class RenderSystem extends IteratingSystem {
                 posMap.get(entity).y,
                 dimMap.get(entity).width,
                 dimMap.get(entity).height
-                );
+        );
+
         batch.setColor(oldColor);
     }
 

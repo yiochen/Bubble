@@ -65,7 +65,7 @@ public class BoundSystem extends IteratingSystem implements EntityListener{
      */
     @Override
     public void entityAdded(Entity entity) {
-        Gdx.app.log(TAG,"entity added, bound system change");
+        Gdx.app.log(TAG,"entity added, at "+ posMap.get(entity).x +" , "+posMap.get(entity).y);
     }
 
     /**

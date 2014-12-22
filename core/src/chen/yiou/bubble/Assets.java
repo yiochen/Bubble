@@ -11,7 +11,9 @@ public class Assets{
     public static Texture circle;
 
     public static void load(){
-       circle=new Texture("circle.png");
+
+        circle=new Texture("circle.png");
+        circle.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     /**
