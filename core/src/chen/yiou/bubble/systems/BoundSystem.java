@@ -1,10 +1,12 @@
 package chen.yiou.bubble.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.Gdx;
 
 import chen.yiou.bubble.Constants;
 import chen.yiou.bubble.components.BoundComponent;
@@ -14,24 +16,29 @@ import chen.yiou.bubble.components.PositionComponent;
 /**
  * Created by Yiou on 12/21/2014.
  */
-public class BoundSystem extends IteratingSystem {
-    private final ComponentMapper<PositionComponent> PosMap;
-    private final ComponentMapper<DimensionComponent> DimMap;
-    private final ComponentMapper<BoundComponent> BoundMap;
+public class BoundSystem extends IteratingSystem implements EntityListener{
+    private static final String TAG="BoundSystem";
+    private final ComponentMapper<PositionComponent> posMap;
+    private final ComponentMapper<DimensionComponent> dimMap;
+    private final ComponentMapper<BoundComponent> boundMap;
+    private Engine engine;
 
     /**
      * Instantiates a system that will iterate over the entities described by the Family, with a
      * specific priority.
-     *
-     * @param family   The family of entities iterated over in this System
-     * @param priority The priority to execute this system with (lower means higher priority)
      */
-    public BoundSystem(int priority) {
-        super(Family.getFor(PositionComponent.class, DimensionComponent.class, BoundComponent.class), priority);
-        PosMap= ComponentMapper.getFor(PositionComponent.class);
-        DimMap= ComponentMapper.getFor(DimensionComponent.class);
-        BoundMap=ComponentMapper.getFor(BoundComponent.class);
+    public BoundSystem() {
+        super(Family.getFor(PositionComponent.class, DimensionComponent.class, BoundComponent.class));
+        posMap = ComponentMapper.getFor(PositionComponent.class);
+        dimMap = ComponentMapper.getFor(DimensionComponent.class);
+        boundMap =ComponentMapper.getFor(BoundComponent.class);
 
+    }
+
+    @Override
+    public void addedToEngine(Engine engine) {
+        super.addedToEngine(engine);
+       this.engine = engine;
     }
 
     /**
@@ -43,9 +50,33 @@ public class BoundSystem extends IteratingSystem {
      */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        //wrap the entity around if if reach the upper bound.
-        if (!Constants.SCREE_BOUND.contains(BoundMap.get(entity).getBound(PosMap.get(entity),DimMap.get(entity)))){
-            PosMap.get(entity).y=0;
+        //remove the entity when it touch the boundary.
+        if (!Constants.SCREE_BOUND.contains(boundMap.get(entity).getBound(posMap.get(entity), dimMap.get(entity)))){
+            engine.removeEntity(entity);
         }
+    }
+
+    /**
+     * Called whenever an {@link com.badlogic.ashley.core.Entity} is added to {@link com.badlogic.ashley.core.Engine} or a specific {@link com.badlogic.ashley.core.Family}
+     * <p/>
+     * See {@link com.badlogic.ashley.core.Engine#addEntityListener(com.badlogic.ashley.core.EntityListener)} and {@link com.badlogic.ashley.core.Engine#addEntityListener(com.badlogic.ashley.core.Family, com.badlogic.ashley.core.EntityListener)}}
+     *
+     * @param entity
+     */
+    @Override
+    public void entityAdded(Entity entity) {
+        Gdx.app.log(TAG,"entity added, bound system change");
+    }
+
+    /**
+     * Called whenever an {@link com.badlogic.ashley.core.Entity} is removed from {@link com.badlogic.ashley.core.Engine} or a specific {@link com.badlogic.ashley.core.Family}
+     * <p/>
+     * See {@link com.badlogic.ashley.core.Engine#addEntityListener(com.badlogic.ashley.core.EntityListener)} and {@link com.badlogic.ashley.core.Engine#addEntityListener(com.badlogic.ashley.core.Family, com.badlogic.ashley.core.EntityListener)}}
+     *
+     * @param entity
+     */
+    @Override
+    public void entityRemoved(Entity entity) {
+        Gdx.app.log(TAG,"entity removed, bound system change");
     }
 }
