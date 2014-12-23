@@ -1,8 +1,6 @@
 package chen.yiou.bubble;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Created by Yiou on 12/20/2014.

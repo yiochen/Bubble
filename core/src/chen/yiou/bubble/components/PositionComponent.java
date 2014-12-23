@@ -1,7 +1,6 @@
 package chen.yiou.bubble.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Yiou on 12/21/2014.
