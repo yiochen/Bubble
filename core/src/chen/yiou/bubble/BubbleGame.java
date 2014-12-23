@@ -2,6 +2,7 @@ package chen.yiou.bubble;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -32,7 +33,7 @@ public class BubbleGame extends Game implements InputProcessor {
     private static final String TAG = "BubbleGame";
     private OrthographicCamera camera;
     private Entity[] previews;
-    private Engine engine;
+    private PooledEngine engine;
     private Viewport viewport;
 
 
@@ -41,7 +42,7 @@ public class BubbleGame extends Game implements InputProcessor {
     public void create() {
         Assets.load();
         previews =new Entity[20];
-        engine=new Engine();
+        engine=new PooledEngine();
         camera=new OrthographicCamera();
         viewport=new StretchViewport(Constants.WIDTH,Constants.HEIGHT,camera);
         viewport.apply(true);
@@ -128,7 +129,7 @@ public class BubbleGame extends Game implements InputProcessor {
         RenderComponent render=new RenderComponent(Assets.circle);
 //        VelocityComponent vel=new VelocityComponent();
         PreviewComponent prev=new PreviewComponent(pointer);
-        Entity entity=new Entity();
+        Entity entity=engine.createEntity();
         entity.add(bound).add(bub).add(color).add(dim).add(pos).add(render).add(prev);
         engine.addEntity(entity);
         previews[pointer]=entity;
