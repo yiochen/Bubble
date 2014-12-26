@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
 import java.util.Comparator;
 
@@ -22,7 +23,7 @@ import chen.yiou.bubble.components.RenderComponent;
 /**
  * Created by Yiou on 12/22/2014.
  */
-public class RenderSystem extends IteratingSystem {
+public class RenderSystem extends IteratingSystem implements Disposable{
     private static final String TAG = "RenderSystem";
     private final ComponentMapper<RenderComponent> renderMap;
     private final ComponentMapper<DimensionComponent> dimMap;
@@ -105,5 +106,13 @@ public class RenderSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         //add entity to queues
         renderQueue.add(entity);
+    }
+
+    /**
+     * Releases all resources of this object.
+     */
+    @Override
+    public void dispose() {
+        batch.dispose();
     }
 }

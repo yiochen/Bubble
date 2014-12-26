@@ -1,38 +1,14 @@
 package chen.yiou.bubble;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-
-import chen.yiou.bubble.components.AccelerationComponent;
-import chen.yiou.bubble.components.BoundComponent;
-import chen.yiou.bubble.components.BubbleComponent;
-import chen.yiou.bubble.components.ColorComponent;
-import chen.yiou.bubble.components.DimensionComponent;
-import chen.yiou.bubble.components.PositionComponent;
-import chen.yiou.bubble.components.PreviewComponent;
-import chen.yiou.bubble.components.RenderComponent;
-import chen.yiou.bubble.components.VelocityComponent;
-import chen.yiou.bubble.systems.BoundSystem;
-import chen.yiou.bubble.systems.PositionSystem;
-import chen.yiou.bubble.systems.PreviewSystem;
-import chen.yiou.bubble.systems.RenderSystem;
-import chen.yiou.bubble.systems.VelocitySystem;
 
 public class BubbleGame extends Game implements InputProcessor {
 
     private static final String TAG = "BubbleGame";
-
     private World world;
 
 
@@ -44,10 +20,24 @@ public class BubbleGame extends Game implements InputProcessor {
     }
 
     @Override
+    public void pause() {
+        world.pause();
+    }
+
+    @Override
+    public void resume() {
+        world.resume();
+    }
+
+    @Override
+    public void dispose() {
+        world.dispose();
+    }
+
+    @Override
     public void resize(int width, int height) {
        world.resize(width,height);
     }
-
 
     @Override
 	public void render () {
@@ -153,4 +143,5 @@ public class BubbleGame extends Game implements InputProcessor {
     public boolean scrolled(int amount) {
         return false;
     }
+
 }

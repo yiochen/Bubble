@@ -35,6 +35,12 @@ public class World extends InputAdapter{
     private Entity[] previews;
     private PooledEngine engine;
     private Viewport viewport;
+    private PositionSystem posSystem;
+    private VelocitySystem velSystem;
+    private BoundSystem boundSystem;
+    private RenderSystem renderSystem;
+    private PreviewSystem previewSystem;
+
     public static World getInstance() {
         return instance;
     }
@@ -56,11 +62,12 @@ public class World extends InputAdapter{
         camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
     }
     private void createSystem() {
-        PositionSystem posSystem=new PositionSystem();
-        VelocitySystem velSystem=new VelocitySystem();
-        BoundSystem boundSystem=new BoundSystem();
-        RenderSystem renderSystem=new RenderSystem(new SpriteBatch(),camera);
-        PreviewSystem previewSystem=new PreviewSystem(camera);
+        posSystem=new PositionSystem();
+        velSystem=new VelocitySystem();
+        boundSystem=new BoundSystem();
+        renderSystem=new RenderSystem(new SpriteBatch(),camera);
+        previewSystem=new PreviewSystem(camera);
+
         engine.addSystem(velSystem);
         engine.addSystem(posSystem);
         engine.addSystem(boundSystem);
@@ -83,18 +90,49 @@ public class World extends InputAdapter{
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        DimensionComponent dim=new DimensionComponent(0,0);
+        DimensionComponent dim=engine.createComponent(DimensionComponent.class);
         Vector3 touch=BubbleGame.screenToWorld(screenX, screenY, this.camera);
-        PositionComponent pos=new PositionComponent(touch.x,touch.y);
-        BoundComponent bound=new BoundComponent();
-        BubbleComponent bub=new BubbleComponent();
-        ColorComponent color=new ColorComponent(new Color((int)(Math.random()*0xFFFFFF)<<8|0xFF));
-        RenderComponent render=new RenderComponent(Assets.circle);
-        PreviewComponent prev=new PreviewComponent(pointer);
+        PositionComponent pos=engine.createComponent(PositionComponent.class);
+        pos.x=touch.x;
+        pos.y=touch.y;
+        BoundComponent bound=engine.createComponent(BoundComponent.class);
+        BubbleComponent bub=engine.createComponent(BubbleComponent.class);
+        ColorComponent color= engine.createComponent(ColorComponent.class);
+        color.color=(new Color((int)(Math.random()*0xFFFFFF)<<8|0xFF));
+        RenderComponent render=engine.createComponent(RenderComponent.class);
+        PreviewComponent prev=engine.createComponent(PreviewComponent.class);
+        prev.pointer=pointer;
         Entity entity=engine.createEntity();
         entity.add(bound).add(bub).add(color).add(dim).add(pos).add(render).add(prev);
         engine.addEntity(entity);
         previews[pointer]=entity;
         return true;
     }
+    public void pause(){
+        //empty preview
+        for (int i=0; i<previews.length;i++){
+            if (previews[i]!=null && previews[i] instanceof Entity){
+                engine.removeEntity(previews[i]);
+            }
+        }
+        //pause systems
+       setSystemsProcessing(false);
+    }
+
+    public void resume(){
+        setSystemsProcessing(true);
+    }
+    public void dispose(){
+        engine.removeAllEntities();
+        engine.clearPools();
+        renderSystem.dispose();
+    }
+    private void setSystemsProcessing(boolean status){
+        posSystem.setProcessing(status);
+        velSystem.setProcessing(status);
+        boundSystem.setProcessing(status);
+        renderSystem.setProcessing(status);
+        previewSystem.setProcessing(status);
+    }
+
 }
