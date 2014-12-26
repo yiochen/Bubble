@@ -7,12 +7,12 @@ import com.badlogic.gdx.utils.Pool;
 /**
  * Created by Yiou on 12/21/2014.
  */
-public class VelocityComponent extends Component{
+public class VelocityComponentU extends Component{
     public Vector2 v;
-    public VelocityComponent(){
+    public VelocityComponentU(){
         v=new Vector2(0,0);
     }
-    public VelocityComponent(float x, float y){
+    public VelocityComponentU(float x, float y){
         v=new Vector2(x,y);
     }
 }

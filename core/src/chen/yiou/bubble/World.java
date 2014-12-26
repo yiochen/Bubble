@@ -11,7 +11,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import chen.yiou.bubble.components.AccelerationComponent;
+import chen.yiou.bubble.builder.EnemyBuilder;
+import chen.yiou.bubble.components.AccelerationComponentU;
 import chen.yiou.bubble.components.BoundComponent;
 import chen.yiou.bubble.components.BubbleComponent;
 import chen.yiou.bubble.components.ColorComponent;
@@ -19,7 +20,7 @@ import chen.yiou.bubble.components.DimensionComponent;
 import chen.yiou.bubble.components.PositionComponent;
 import chen.yiou.bubble.components.PreviewComponent;
 import chen.yiou.bubble.components.RenderComponent;
-import chen.yiou.bubble.components.VelocityComponent;
+import chen.yiou.bubble.components.VelocityComponentU;
 import chen.yiou.bubble.systems.BoundSystem;
 import chen.yiou.bubble.systems.PositionSystem;
 import chen.yiou.bubble.systems.PreviewSystem;
@@ -82,14 +83,22 @@ public class World extends InputAdapter{
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Entity bubble=previews[pointer];
-        VelocityComponent vel=new VelocityComponent();
-        AccelerationComponent accel=new AccelerationComponent();
-        bubble.add(vel).add(accel).remove(PreviewComponent.class);
+        launchBubble(bubble);
         return true;
     }
-
+    private void launchBubble(Entity bubble){
+        VelocityComponentU vel=new VelocityComponentU();
+        AccelerationComponentU accel=new AccelerationComponentU();
+        bubble.add(vel).add(accel).remove(PreviewComponent.class);
+    }
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        Entity bubble=createPreviewBubble(screenX,screenY,pointer);
+        engine.addEntity(bubble);
+        previews[pointer]=bubble;
+        return true;
+    }
+    private Entity createPreviewBubble(int screenX, int screenY, int pointer){
         DimensionComponent dim=engine.createComponent(DimensionComponent.class);
         Vector3 touch=BubbleGame.screenToWorld(screenX, screenY, this.camera);
         PositionComponent pos=engine.createComponent(PositionComponent.class);
@@ -104,9 +113,13 @@ public class World extends InputAdapter{
         prev.pointer=pointer;
         Entity entity=engine.createEntity();
         entity.add(bound).add(bub).add(color).add(dim).add(pos).add(render).add(prev);
-        engine.addEntity(entity);
-        previews[pointer]=entity;
-        return true;
+        return entity;
+    }
+
+    public Entity createEnemy(){
+        Entity enemy=new EnemyBuilder().hp(100).dps(10).build(engine);
+        engine.addEntity(enemy);
+        return enemy;
     }
     public void pause(){
         //empty preview

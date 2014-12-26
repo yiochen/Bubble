@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Pool;
  * Created by Yiou on 12/21/2014.
  */
 public class ColorComponent extends Component implements Pool.Poolable{
-    public Color color=Color.BLUE;
+    public Color color=Color.WHITE;
     public ColorComponent(){}
     public ColorComponent(Color color){
         this.color=color;
@@ -19,6 +19,6 @@ public class ColorComponent extends Component implements Pool.Poolable{
      */
     @Override
     public void reset() {
-        this.color=Color.BLUE;
+        this.color=Color.WHITE;
     }
 }

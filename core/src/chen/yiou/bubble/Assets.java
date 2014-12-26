@@ -7,11 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public class Assets{
     public static Texture circle;
+    public static Texture locust;
 
     public static void load(){
 
         circle=new Texture("circle.png");
-        circle.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        locust=new Texture("Locust.png");
     }
 
     /**
@@ -19,6 +20,7 @@ public class Assets{
      */
     public static void dispose() {
         circle.dispose();
+        locust.dispose();
     }
 
 }

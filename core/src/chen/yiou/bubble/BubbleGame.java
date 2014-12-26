@@ -52,7 +52,8 @@ public class BubbleGame extends Game implements InputProcessor {
      */
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        world.createEnemy();
+        return true;
     }
 
     /**

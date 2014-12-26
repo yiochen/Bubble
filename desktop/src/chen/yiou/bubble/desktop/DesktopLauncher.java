@@ -7,8 +7,8 @@ import chen.yiou.bubble.BubbleGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.height=500;
-        config.width=800;
+        config.width=500;
+        config.height=800;
 		new LwjglApplication(new BubbleGame(), config);
 	}
 }

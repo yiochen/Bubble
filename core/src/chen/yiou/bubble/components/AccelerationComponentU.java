@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Pool;
 /**
  * Created by Yiou on 12/25/2014.
  */
-public class AccelerationComponent extends Component{
+public class AccelerationComponentU extends Component{
     public Vector2 accel=new Vector2(0,0.5f);
 
 

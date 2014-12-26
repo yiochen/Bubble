@@ -53,7 +53,9 @@ public class BoundSystem extends IteratingSystem implements EntityListener{
         //remove the entity when it touch the boundary.
 
         if (!Constants.SCREE_BOUND.overlaps(boundMap.get(entity).getBound(posMap.get(entity), dimMap.get(entity)))){
+            entity.removeAll();
             engine.removeEntity(entity);
+
         }
     }
 
