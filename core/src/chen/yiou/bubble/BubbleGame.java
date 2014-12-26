@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import chen.yiou.bubble.components.AccelerationComponent;
 import chen.yiou.bubble.components.BoundComponent;
 import chen.yiou.bubble.components.BubbleComponent;
 import chen.yiou.bubble.components.ColorComponent;
@@ -31,48 +32,26 @@ import chen.yiou.bubble.systems.VelocitySystem;
 public class BubbleGame extends Game implements InputProcessor {
 
     private static final String TAG = "BubbleGame";
-    private OrthographicCamera camera;
-    private Entity[] previews;
-    private PooledEngine engine;
-    private Viewport viewport;
 
+    private World world;
 
 
     @Override
     public void create() {
         Assets.load();
-        previews =new Entity[20];
-        engine=new PooledEngine();
-        camera=new OrthographicCamera();
-        viewport=new StretchViewport(Constants.WIDTH,Constants.HEIGHT,camera);
-        viewport.apply(true);
-        createSystem();
+        this.world=World.getInstance();
         Gdx.input.setInputProcessor(this);
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width,height);
-        camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+       world.resize(width,height);
     }
 
-    private void createSystem() {
-        PositionSystem posSystem=new PositionSystem();
-        VelocitySystem velSystem=new VelocitySystem();
-        BoundSystem boundSystem=new BoundSystem();
-        RenderSystem renderSystem=new RenderSystem(new SpriteBatch(),camera);
-        PreviewSystem previewSystem=new PreviewSystem(camera);
-        engine.addSystem(velSystem);
-        engine.addSystem(posSystem);
-        engine.addSystem(boundSystem);
-        engine.addSystem(previewSystem);
-        engine.addSystem(renderSystem);
-        engine.addEntityListener(boundSystem);
-    }
 
     @Override
 	public void render () {
-        engine.update(Gdx.graphics.getDeltaTime());
+        world.render();
 	}
 
     /**
@@ -120,20 +99,7 @@ public class BubbleGame extends Game implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Gdx.app.log(TAG,"finger "+pointer+" down!");
-        DimensionComponent dim=new DimensionComponent(0,0);
-        Vector3 touch=screenToWorld(screenX,screenY,this.camera);
-        PositionComponent pos=new PositionComponent(touch.x,touch.y);
-        BoundComponent bound=new BoundComponent();
-        BubbleComponent bub=new BubbleComponent();
-        ColorComponent color=new ColorComponent(new Color((int)(Math.random()*0xFFFFFF)<<8|0xFF));
-        RenderComponent render=new RenderComponent(Assets.circle);
-//        VelocityComponent vel=new VelocityComponent();
-        PreviewComponent prev=new PreviewComponent(pointer);
-        Entity entity=engine.createEntity();
-        entity.add(bound).add(bub).add(color).add(dim).add(pos).add(render).add(prev);
-        engine.addEntity(entity);
-        previews[pointer]=entity;
-        return true;
+        return world.touchDown( screenX, screenY, pointer, button);
     }
     public static Vector3 screenToWorld(int screenX, int screenY, OrthographicCamera camera){
         Vector3 pos = new Vector3(screenX, screenY, 0);
@@ -150,10 +116,7 @@ public class BubbleGame extends Game implements InputProcessor {
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Entity bubble=previews[pointer];
-        VelocityComponent vel=new VelocityComponent();
-        bubble.add(vel).remove(PreviewComponent.class);
-        return true;
+       return world.touchUp(screenX,screenY,pointer,button);
     }
 
     /**

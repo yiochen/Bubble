@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 
+import chen.yiou.bubble.components.AccelerationComponent;
 import chen.yiou.bubble.components.DimensionComponent;
 import chen.yiou.bubble.components.VelocityComponent;
 
@@ -16,7 +17,8 @@ public class VelocitySystem extends IteratingSystem{
     public static final String TAG="VelocitySystem";
     private final ComponentMapper<VelocityComponent> velMap;
     private final ComponentMapper<DimensionComponent> dimMap;
-    public Vector2 accel=new Vector2(0,0.5f);
+    private final ComponentMapper<AccelerationComponent> accelMap;
+
 
     /**
      * Instantiates a system that will iterate over the entities described by the Family.
@@ -24,9 +26,10 @@ public class VelocitySystem extends IteratingSystem{
      * @param family The family of entities iterated over in this System
      */
     public VelocitySystem() {
-        super(Family.getFor(VelocityComponent.class, DimensionComponent.class));
+        super(Family.getFor(VelocityComponent.class, DimensionComponent.class, AccelerationComponent.class));
         velMap=ComponentMapper.getFor(VelocityComponent.class);
         dimMap=ComponentMapper.getFor(DimensionComponent.class);
+        accelMap=ComponentMapper.getFor(AccelerationComponent.class);
     }
 
     /**
@@ -38,6 +41,6 @@ public class VelocitySystem extends IteratingSystem{
      */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        velMap.get(entity).v.add(new Vector2(accel).scl(deltaTime));
+        velMap.get(entity).v.add(new Vector2(accelMap.get(entity).accel).scl(deltaTime));
     }
 }
